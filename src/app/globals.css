@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-kant-bg: #fafafa;
+  --color-kant-fg: #0a0a0a;
+  --color-kant-muted: #737373;
+  --color-kant-line: #e5e5e5;
+  --color-kant-accent: #ff3b30;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-kant-bg);
+    color: var(--color-kant-fg);
+  }
+
+  ::selection {
+    background: var(--color-kant-fg);
+    color: var(--color-kant-bg);
+  }
+}
