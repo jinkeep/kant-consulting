@@ -52,9 +52,9 @@ export async function POST(req: Request) {
       user = { id: userId, phone, inviteCode, role: invite.role, createdAt: new Date() };
     }
 
-    await createSession({ phone: user.phone, role: user.role });
+    await createSession({ phone: user.phone, role: user.role, inviteCode: user.inviteCode });
 
-    return Response.json({ success: true, role: user.role });
+    return Response.json({ success: true, role: user.role, redirect: "/chat" });
   } catch (err) {
     console.error("[/api/auth/login]", err);
     return Response.json({ error: "登录失败" }, { status: 500 });

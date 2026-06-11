@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -31,7 +29,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/chat");
+      window.location.href = data.redirect ?? "/chat";
     } catch {
       setError("网络错误，请重试");
       setLoading(false);

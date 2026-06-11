@@ -214,9 +214,13 @@ export async function POST(req: Request) {
               },
             });
 
+            let hasText = false;
             for await (const chunk of uiStream) {
-              if (!firstChunkSeen && chunk.type !== "start") {
+              if (chunk.type === "abort" && !hasText) {
                 throw new Error("stream aborted before first chunk");
+              }
+              if (chunk.type === "text-delta") {
+                hasText = true;
               }
               writer.write(chunk);
             }

@@ -10,6 +10,7 @@ const EXPIRES_IN = 7 * 24 * 60 * 60; // 7 days
 export type SessionPayload = {
   phone: string;
   role: "admin" | "user";
+  inviteCode: string;
 };
 
 export async function createSession(payload: SessionPayload): Promise<void> {
