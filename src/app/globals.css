@@ -6,8 +6,10 @@
   --color-kant-muted: #737373;
   --color-kant-line: #e5e5e5;
   --color-kant-accent: #ff3b30;
+  --color-kant-info: #2563eb;
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
 }
 
 @layer base {
@@ -20,5 +22,36 @@
   ::selection {
     background: var(--color-kant-fg);
     color: var(--color-kant-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--color-kant-fg) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .font-display {
+    font-family: var(--font-display), Georgia, serif;
   }
 }
