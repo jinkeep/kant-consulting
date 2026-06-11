@@ -187,44 +187,40 @@ export async function POST(req: Request) {
                   buffered += chunk.text;
                 }
               },
-              onError({ error }) {
-                const msg =
-                  error instanceof Error ? error.message : String(error);
-                console.error(
-                  `[/api/chat] provider=${provider.name} stream error:`,
-                  msg
-                );
-              },
             });
 
             activeProviderName = provider.name;
 
-            writer.merge(
-              result.toUIMessageStream({
-                sendStart: isFirstAttempt,
-                sendFinish: true,
-                messageMetadata: ({
-                  part,
-                }): ChatMessageMetadata | undefined => {
-                  if (part.type === "start") {
-                    return { nodeId: state.nodeId };
-                  }
-                  if (part.type === "finish") {
-                    const parsed: ParsedState | null = parseStateBlock(buffered);
-                    const advance = parsed?.advance === true;
-                    const next = advance ? nextNode(state.nodeId) : state.nodeId;
-                    return {
-                      nodeId: state.nodeId,
-                      nextNodeId: next,
-                      addedFacts: parsed?.facts ?? [],
-                    };
-                  }
-                  return undefined;
-                },
-              })
-            );
+            const uiStream = result.toUIMessageStream({
+              sendStart: isFirstAttempt,
+              sendFinish: true,
+              messageMetadata: ({
+                part,
+              }): ChatMessageMetadata | undefined => {
+                if (part.type === "start") {
+                  return { nodeId: state.nodeId };
+                }
+                if (part.type === "finish") {
+                  const parsed: ParsedState | null = parseStateBlock(buffered);
+                  const advance = parsed?.advance === true;
+                  const next = advance ? nextNode(state.nodeId) : state.nodeId;
+                  return {
+                    nodeId: state.nodeId,
+                    nextNodeId: next,
+                    addedFacts: parsed?.facts ?? [],
+                  };
+                }
+                return undefined;
+              },
+            });
 
-            await result.consumeStream();
+            for await (const chunk of uiStream) {
+              if (!firstChunkSeen && chunk.type !== "start") {
+                throw new Error("stream aborted before first chunk");
+              }
+              writer.write(chunk);
+            }
+
             clearTimeout(overallTimer);
             clearTimeout(firstChunkTimer);
             recordSuccess(provider.name);
