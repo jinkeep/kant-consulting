@@ -25,10 +25,19 @@ interface ProvidersFile {
 let cache: CustomProvider[] | null = null;
 
 function loadProvidersFromDisk(): CustomProvider[] {
+  const inline = process.env.CUSTOM_PROVIDERS_JSON;
+  if (inline) {
+    const parsed = JSON.parse(inline) as ProvidersFile;
+    if (!parsed?.providers?.length) {
+      throw new Error("CUSTOM_PROVIDERS_JSON 中没有任何 provider");
+    }
+    return parsed.providers;
+  }
+
   const path = process.env.CUSTOM_PROVIDERS_PATH;
   if (!path) {
     throw new Error(
-      "CUSTOM_PROVIDERS_PATH 未配置。请在 .env.local 中指向 custom_providers.json"
+      "CUSTOM_PROVIDERS_JSON 或 CUSTOM_PROVIDERS_PATH 必须配置一个"
     );
   }
   const raw = readFileSync(path, "utf8");
