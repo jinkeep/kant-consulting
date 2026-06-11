@@ -42,18 +42,14 @@ export async function POST(req: Request) {
         return Response.json({ error: "手机号已绑定其他邀请码" }, { status: 403 });
       }
     } else {
-      [user] = await db
-        .insert(users)
-        .values({
-          id: randomUUID(),
-          phone,
-          inviteCode,
-          role: invite.role,
-        })
-        .$returningId()
-        .then(() =>
-          db.select().from(users).where(eq(users.phone, phone)).limit(1)
-        );
+      const userId = randomUUID();
+      await db.insert(users).values({
+        id: userId,
+        phone,
+        inviteCode,
+        role: invite.role,
+      });
+      user = { id: userId, phone, inviteCode, role: invite.role, createdAt: new Date() };
     }
 
     await createSession({ phone: user.phone, role: user.role });
