@@ -395,7 +395,11 @@ export default function ChatPage() {
   React.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    // During streaming, tokens arrive rapidly. Repeatedly queuing a smooth
+    // scroll on every chunk thrashes the main thread, so use an instant jump
+    // while streaming and only animate when settled.
+    const streaming = status === "submitted" || status === "streaming";
+    el.scrollTo({ top: el.scrollHeight, behavior: streaming ? "auto" : "smooth" });
   }, [messages, status]);
 
   React.useEffect(() => {
@@ -514,9 +518,18 @@ export default function ChatPage() {
             </FadeUp>
           ) : null}
 
-          {messages.map((m) => {
+          {messages.map((m, idx) => {
             const text = cleanStreamingText(messageText(m));
             if (!text && m.role === "assistant") return null;
+            // The last assistant message while the stream is live arrives
+            // token-by-token. Running the full markdown parser on every chunk
+            // is O(n²) over the report length and crashes the tab. Render it
+            // as plain text while streaming; parse to rich markdown only once
+            // the stream settles.
+            const isStreamingThis =
+              m.role === "assistant" &&
+              idx === messages.length - 1 &&
+              (status === "submitted" || status === "streaming");
             return (
               <motion.div
                 key={m.id}
@@ -544,7 +557,13 @@ export default function ChatPage() {
                       Kant Agent · {NODE_DEFS[(m.metadata?.nodeId ?? state.nodeId) as NodeId].label}
                     </div>
                     <div className="border-l-2 border-kant-fg pl-5">
-                      <Markdown text={text} dense />
+                      {isStreamingThis ? (
+                        <div className="leading-relaxed text-[15px] text-kant-fg/90 whitespace-pre-wrap">
+                          {text}
+                        </div>
+                      ) : (
+                        <Markdown text={text} dense />
+                      )}
                     </div>
                     <div className="mt-1 pl-5">
                       <CopyButton text={text} />

@@ -43,7 +43,7 @@ interface InviteCode {
 
 type Tab = "leads" | "reports" | "sessions" | "invites";
 
-export default function AdminPage() {
+function AdminPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tab, setTab] = React.useState<Tab>(
@@ -585,5 +585,13 @@ export default function AdminPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <React.Suspense fallback={null}>
+      <AdminPageInner />
+    </React.Suspense>
   );
 }
