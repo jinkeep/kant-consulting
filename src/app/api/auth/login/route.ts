@@ -21,16 +21,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "手机号和邀请码不能为空" }, { status: 400 });
     }
 
-    const [invite] = await db
-      .select()
-      .from(inviteCodes)
-      .where(and(eq(inviteCodes.code, inviteCode), eq(inviteCodes.isActive, true)))
-      .limit(1);
-
-    if (!invite) {
-      return Response.json({ error: "邀请码无效或已停用" }, { status: 401 });
-    }
-
+    // Check if user exists first
     let [user] = await db
       .select()
       .from(users)
@@ -38,10 +29,22 @@ export async function POST(req: Request) {
       .limit(1);
 
     if (user) {
+      // Existing user: verify invite code matches
       if (user.inviteCode !== inviteCode) {
         return Response.json({ error: "手机号已绑定其他邀请码" }, { status: 403 });
       }
     } else {
+      // New user: verify invite code is valid and active
+      const [invite] = await db
+        .select()
+        .from(inviteCodes)
+        .where(and(eq(inviteCodes.code, inviteCode), eq(inviteCodes.isActive, true)))
+        .limit(1);
+
+      if (!invite) {
+        return Response.json({ error: "邀请码无效或已停用" }, { status: 401 });
+      }
+
       const userId = randomUUID();
       await db.insert(users).values({
         id: userId,
