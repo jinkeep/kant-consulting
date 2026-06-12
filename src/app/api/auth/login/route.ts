@@ -49,6 +49,13 @@ export async function POST(req: Request) {
         inviteCode,
         role: invite.role,
       });
+
+      // Mark invite code as used
+      await db
+        .update(inviteCodes)
+        .set({ isActive: false })
+        .where(eq(inviteCodes.code, inviteCode));
+
       user = { id: userId, phone, inviteCode, role: invite.role, createdAt: new Date() };
     }
 

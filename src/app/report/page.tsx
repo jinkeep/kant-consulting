@@ -155,15 +155,46 @@ function LeadForm({ markdown }: { markdown: string }) {
 export default function ReportPage() {
   const reduce = useReducedMotion();
   const [markdown, setMarkdown] = React.useState<string | null>(null);
-  const [generatedAt] = React.useState(() => new Date());
+  const [generatedAt, setGeneratedAt] = React.useState(() => new Date());
 
   React.useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(REPORT_STORAGE_KEY);
-      setMarkdown(stored ?? "");
-    } catch {
-      setMarkdown("");
+    let cancelled = false;
+
+    function fallbackToLocal() {
+      try {
+        const stored = window.localStorage.getItem(REPORT_STORAGE_KEY);
+        if (!cancelled) setMarkdown(stored ?? "");
+      } catch {
+        if (!cancelled) setMarkdown("");
+      }
     }
+
+    // 优先从服务器拉取（跨设备/浏览器持久化），失败或为空再退回 localStorage
+    fetch("/api/report")
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data: { report?: string | null; generatedAt?: string }) => {
+        if (cancelled) return;
+        if (data.report && data.report.trim()) {
+          setMarkdown(data.report);
+          if (data.generatedAt) {
+            const d = new Date(data.generatedAt);
+            if (!Number.isNaN(d.getTime())) setGeneratedAt(d);
+          }
+          // 同步回本地，保持离线可读
+          try {
+            window.localStorage.setItem(REPORT_STORAGE_KEY, data.report);
+          } catch {}
+        } else {
+          fallbackToLocal();
+        }
+      })
+      .catch(() => {
+        fallbackToLocal();
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (markdown === null) {

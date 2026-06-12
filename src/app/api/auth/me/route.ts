@@ -7,5 +7,9 @@ export async function GET() {
   if (!session) {
     return Response.json({ error: "未登录" }, { status: 401 });
   }
-  return Response.json({ phone: session.phone, role: session.role });
+  return Response.json({
+    phone: session.phone,
+    role: session.role,
+    inviteCode: session.inviteCode,
+  });
 }

@@ -13,8 +13,8 @@ export interface ConversationState {
 const STATE_OPEN = "[[STATE]]";
 const STATE_CLOSE = "[[/STATE]]";
 
-const STATE_REGEX = /\[\[STATE\]+([\s\S]*?)\[\[\/STATE\]+/;
-const STATE_OPEN_LOOSE = /\[\[STATE\]+/;
+const STATE_REGEX = /\[+STATE\]+([\s\S]*?)\[+\/STATE\]+/;
+const STATE_OPEN_LOOSE = /\[+STATE\]+/;
 
 export function parseStateBlock(text: string): ParsedState | null {
   const m = STATE_REGEX.exec(text);
@@ -36,7 +36,7 @@ export function stripStateBlock(text: string): string {
 }
 
 const PARTIAL_OPEN_TAIL =
-  /\[(?:\[(?:S(?:T(?:A(?:T(?:E(?:\](?:\])?)?)?)?)?)?)?)?$/;
+  /\[+(?:S(?:T(?:A(?:T(?:E(?:\]+)?)?)?)?)?)?$/;
 
 export function cleanStreamingText(text: string): string {
   let t = text.replace(STATE_REGEX, "");

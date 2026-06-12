@@ -13,8 +13,29 @@ export async function GET() {
   }
 
   const db = getDb();
-  const list = await db.select().from(inviteCodes);
-  return Response.json({ invites: list });
+  const list = await db
+    .select({
+      id: inviteCodes.id,
+      code: inviteCodes.code,
+      role: inviteCodes.role,
+      isActive: inviteCodes.isActive,
+      createdBy: inviteCodes.createdBy,
+      createdAt: inviteCodes.createdAt,
+      userPhone: users.phone,
+    })
+    .from(inviteCodes)
+    .leftJoin(users, eq(inviteCodes.code, users.inviteCode))
+    .orderBy(inviteCodes.createdAt);
+
+  // Group by invite code, keep only the first user for each code
+  const uniqueInvites = list.reduce((acc, item) => {
+    if (!acc.find(i => i.code === item.code)) {
+      acc.push(item);
+    }
+    return acc;
+  }, [] as typeof list);
+
+  return Response.json({ invites: uniqueInvites });
 }
 
 export async function POST(req: Request) {

@@ -100,6 +100,10 @@ function CopyButton({ text }: { text: string }) {
 
 function ProgressBar({ activeId }: { activeId: NodeId }) {
   const reduce = useReducedMotion();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
   const activeIndex = NODE_IDS.indexOf(activeId);
   return (
     <div className="border-b border-kant-line bg-kant-bg/95 backdrop-blur">
@@ -124,7 +128,7 @@ function ProgressBar({ activeId }: { activeId: NodeId }) {
                         : { type: "spring", stiffness: 220, damping: 30 }
                     }
                   />
-                  {active && !reduce ? (
+                  {active && mounted && !reduce ? (
                     <motion.div
                       className="absolute inset-y-0 -left-1/3 w-1/3 bg-kant-accent"
                       animate={{ left: ["-33%", "100%"] }}
@@ -291,15 +295,15 @@ function loadInitialMessages(): ChatUIMessage[] {
 
 export default function ChatPage() {
   const router = useRouter();
-  const [state, setState] = React.useState<ConversationState>(() =>
-    loadInitialState()
-  );
+  const [state, setState] = React.useState<ConversationState>({
+    nodeId: "greeting",
+    facts: [],
+  });
   const [model, setModel] = React.useState<ModelSelection | null>(null);
   const [input, setInput] = React.useState("");
-  const [initialMessages] = React.useState<ChatUIMessage[]>(() =>
-    loadInitialMessages()
-  );
-  const [user, setUser] = React.useState<{ phone: string; role: "admin" | "user" } | null>(null);
+  const [initialMessages] = React.useState<ChatUIMessage[]>([]);
+  const [user, setUser] = React.useState<{ phone: string; role: "admin" | "user"; inviteCode: string } | null>(null);
+  const [hasServerReport, setHasServerReport] = React.useState(false);
   const stateRef = React.useRef(state);
   const modelRef = React.useRef(model);
   const finalReportRef = React.useRef<string | null>(null);
@@ -311,7 +315,19 @@ export default function ChatPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.phone && data.role) {
-          setUser({ phone: data.phone, role: data.role });
+          setUser({ phone: data.phone, role: data.role, inviteCode: data.inviteCode ?? "" });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // 检查服务器是否已有历史报告
+  React.useEffect(() => {
+    fetch("/api/report")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data: { report?: string | null }) => {
+        if (data.report && data.report.trim()) {
+          setHasServerReport(true);
         }
       })
       .catch(() => {});
@@ -366,6 +382,17 @@ export default function ChatPage() {
   });
 
   React.useEffect(() => {
+    const loaded = loadInitialMessages();
+    if (loaded.length > 0) {
+      setMessages(loaded);
+    }
+    const loadedState = loadInitialState();
+    if (loadedState.nodeId !== "greeting" || loadedState.facts.length > 0) {
+      setState(loadedState);
+    }
+  }, [setMessages]);
+
+  React.useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
@@ -404,7 +431,8 @@ export default function ChatPage() {
   };
 
   const reportReady =
-    finalReportRef.current !== null && state.nodeId === "report";
+    (finalReportRef.current !== null && state.nodeId === "report") ||
+    hasServerReport;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -538,7 +566,7 @@ export default function ChatPage() {
             }
           />
 
-          {error ? (
+          {error && (user?.role === "admin" || user?.inviteCode === "chijun") ? (
             <div className="border border-kant-accent/60 bg-kant-accent/5 text-kant-accent px-4 py-3 text-sm flex items-start justify-between gap-4">
               <div className="flex-1 leading-relaxed">
                 请求出错：{error.message}
