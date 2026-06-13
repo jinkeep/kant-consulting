@@ -144,8 +144,8 @@ export default function ReportPage() {
         const decoded = decodeURIComponent(urlContent);
         if (!cancelled) setMarkdown(decoded);
         return;
-      } catch (err) {
-        console.error("URL 参数解析失败:", err);
+      } catch {
+        // URL 参数解析失败，继续尝试其他数据源
       }
     }
 
@@ -294,7 +294,6 @@ export default function ReportPage() {
                     a.click();
                     URL.revokeObjectURL(url);
                   } catch (err) {
-                    console.error(err);
                     alert(`PDF 生成失败: ${err instanceof Error ? err.message : String(err)}`);
                   }
                 }}
