@@ -3,7 +3,7 @@ services:
     name: kant-consulting
     runtime: node
     plan: free
-    buildCommand: pnpm install && pnpm exec playwright install --with-deps chromium && pnpm build
+    buildCommand: pnpm install && pnpm exec playwright install chromium && pnpm build
     startCommand: pnpm start
     envVars:
       - key: NODE_ENV
