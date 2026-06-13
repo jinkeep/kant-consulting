@@ -2,37 +2,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "motion/react";
 import { Markdown } from "@/components/Markdown";
-import { ReportPdf } from "@/components/ReportPdf";
 import { FadeUp, FadeInView, CountUp } from "@/components/motion-bits";
 
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((m) => m.PDFDownloadLink),
-  { ssr: false, loading: () => <DownloadButton disabled label="加载中…" /> }
-);
-
 const REPORT_STORAGE_KEY = "kant.lastReport";
-
-function DownloadButton({
-  disabled,
-  label,
-}: {
-  disabled?: boolean;
-  label: string;
-}) {
-  return (
-    <span
-      className={`inline-flex items-center gap-3 px-6 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase ${
-        disabled ? "opacity-50 cursor-not-allowed" : ""
-      }`}
-    >
-      <span aria-hidden>↓</span>
-      {label}
-    </span>
-  );
-}
 
 function highlightCount(markdown: string): number {
   const m = markdown.match(/##\s*[^\n]*机会[^\n]*\n([\s\S]*?)(?=\n##\s|$)/);
@@ -160,6 +134,21 @@ export default function ReportPage() {
   React.useEffect(() => {
     let cancelled = false;
 
+    // PDF 生成模式：直接从 URL 参数读取 markdown（绕过 localStorage 和 API）
+    const params = new URLSearchParams(window.location.search);
+    const pdfMode = params.get("__pdf");
+    const urlContent = params.get("content");
+
+    if (pdfMode === "1" && urlContent) {
+      try {
+        const decoded = decodeURIComponent(urlContent);
+        if (!cancelled) setMarkdown(decoded);
+        return;
+      } catch (err) {
+        console.error("URL 参数解析失败:", err);
+      }
+    }
+
     function fallbackToLocal() {
       try {
         const stored = window.localStorage.getItem(REPORT_STORAGE_KEY);
@@ -237,7 +226,7 @@ export default function ReportPage() {
 
   return (
     <main className="min-h-[100dvh] flex flex-col">
-      <header className="border-b border-kant-line">
+      <header data-print="hide" className="border-b border-kant-line">
         <div className="mx-auto max-w-4xl px-6 py-5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="h-5 w-5 bg-kant-fg transition-colors group-hover:bg-kant-accent" aria-hidden />
@@ -266,7 +255,7 @@ export default function ReportPage() {
         </FadeUp>
 
         <FadeUp delay={0.1}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-kant-line border border-kant-line mb-12">
+          <div data-print="hide" className="grid grid-cols-1 md:grid-cols-3 gap-px bg-kant-line border border-kant-line mb-12">
             <div className="bg-kant-bg p-5">
               <div className="font-mono text-[10px] tracking-widest uppercase text-kant-muted mb-2">
                 Opportunities
@@ -284,38 +273,56 @@ export default function ReportPage() {
               </div>
             </div>
             <div className="bg-kant-bg p-5 flex items-center">
-              <PDFDownloadLink
-                document={<ReportPdf markdown={markdown} generatedAt={generatedAt} />}
-                fileName={`kant-consulting-diagnostic-${dateStr}.pdf`}
-                className="inline-block w-full"
+              <motion.button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/report/pdf", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ markdown }),
+                    });
+                    if (!res.ok) {
+                      const errorData = await res.json().catch(() => ({ error: "未知错误" }));
+                      throw new Error(errorData.detail || errorData.error || "PDF 生成失败");
+                    }
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `kant-report-${Date.now()}.pdf`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  } catch (err) {
+                    console.error(err);
+                    alert(`PDF 生成失败: ${err instanceof Error ? err.message : String(err)}`);
+                  }
+                }}
+                whileHover={reduce ? undefined : { scale: 1.02 }}
+                whileTap={reduce ? undefined : { scale: 0.98 }}
+                className="group relative inline-flex items-center gap-3 w-full justify-center px-5 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase overflow-hidden hover:bg-kant-accent transition-colors"
               >
-                {({ loading }) => (
-                  <motion.span
-                    whileHover={reduce ? undefined : { scale: 1.02 }}
-                    whileTap={reduce ? undefined : { scale: 0.98 }}
-                    className="group relative inline-flex items-center gap-3 w-full justify-center px-5 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase overflow-hidden hover:bg-kant-accent transition-colors"
-                  >
-                    <span aria-hidden className="transition-transform group-hover:-translate-y-0.5">↓</span>
-                    {loading ? "生成中…" : "下载 PDF"}
-                  </motion.span>
-                )}
-              </PDFDownloadLink>
+                <span aria-hidden className="transition-transform group-hover:-translate-y-0.5">↓</span>
+                下载 PDF
+              </motion.button>
             </div>
           </div>
         </FadeUp>
 
         <FadeInView amount={0.1}>
-          <article className="border-l-2 border-kant-fg pl-8 mb-16">
+          <article data-print="report" className="border-l-2 border-kant-fg pl-8 mb-16">
             <Markdown text={markdown} />
           </article>
         </FadeInView>
 
         <FadeInView amount={0.2}>
-          <LeadForm markdown={markdown} />
+          <div data-print="hide">
+            <LeadForm markdown={markdown} />
+          </div>
         </FadeInView>
       </div>
 
-      <footer className="border-t border-kant-line">
+      <footer data-print="hide" className="border-t border-kant-line">
         <div className="mx-auto max-w-4xl px-6 py-6 flex items-center justify-between font-mono text-[10px] tracking-[0.2em] uppercase text-kant-muted">
           <span>© Kant Consulting</span>
           <span>MVP · Beta</span>

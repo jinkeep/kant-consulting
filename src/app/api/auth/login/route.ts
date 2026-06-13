@@ -1,6 +1,7 @@
 import { getDb } from "@/lib/db/client";
 import { users, inviteCodes } from "@/lib/db/schema";
 import { createSession } from "@/lib/auth/session";
+import { resolveLogin, type LoginStore } from "@/lib/auth/login-logic";
 import { eq, and } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
@@ -11,60 +12,72 @@ type LoginRequest = {
   inviteCode: string;
 };
 
+// Wire the pure login logic to Drizzle. The branching lives in resolveLogin
+// (unit-tested); this just provides real data access.
+function drizzleStore(db: ReturnType<typeof getDb>): LoginStore {
+  return {
+    async findUserByPhone(phone) {
+      const [u] = await db
+        .select()
+        .from(users)
+        .where(eq(users.phone, phone))
+        .limit(1);
+      return u ?? null;
+    },
+    async findActiveInvite(code) {
+      const [inv] = await db
+        .select()
+        .from(inviteCodes)
+        .where(and(eq(inviteCodes.code, code), eq(inviteCodes.isActive, true)))
+        .limit(1);
+      return inv ?? null;
+    },
+    async createUser(input) {
+      const id = randomUUID();
+      await db.insert(users).values({
+        id,
+        phone: input.phone,
+        inviteCode: input.inviteCode,
+        role: input.role,
+      });
+      return {
+        id,
+        phone: input.phone,
+        inviteCode: input.inviteCode,
+        role: input.role,
+        createdAt: new Date(),
+      };
+    },
+    async deactivateInvite(code) {
+      await db
+        .update(inviteCodes)
+        .set({ isActive: false })
+        .where(eq(inviteCodes.code, code));
+    },
+  };
+}
+
 export async function POST(req: Request) {
   try {
     const db = getDb();
     const body = (await req.json()) as LoginRequest;
-    const { phone, inviteCode } = body;
 
-    if (!phone || !inviteCode) {
-      return Response.json({ error: "手机号和邀请码不能为空" }, { status: 400 });
+    const result = await resolveLogin(drizzleStore(db), {
+      phone: body.phone,
+      inviteCode: body.inviteCode,
+    });
+
+    if (!result.ok) {
+      return Response.json({ error: result.error }, { status: result.status });
     }
 
-    // Check if user exists first
-    let [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.phone, phone))
-      .limit(1);
+    await createSession(result.session);
 
-    if (user) {
-      // Existing user: verify invite code matches
-      if (user.inviteCode !== inviteCode) {
-        return Response.json({ error: "手机号已绑定其他邀请码" }, { status: 403 });
-      }
-    } else {
-      // New user: verify invite code is valid and active
-      const [invite] = await db
-        .select()
-        .from(inviteCodes)
-        .where(and(eq(inviteCodes.code, inviteCode), eq(inviteCodes.isActive, true)))
-        .limit(1);
-
-      if (!invite) {
-        return Response.json({ error: "邀请码无效或已停用" }, { status: 401 });
-      }
-
-      const userId = randomUUID();
-      await db.insert(users).values({
-        id: userId,
-        phone,
-        inviteCode,
-        role: invite.role,
-      });
-
-      // Mark invite code as used
-      await db
-        .update(inviteCodes)
-        .set({ isActive: false })
-        .where(eq(inviteCodes.code, inviteCode));
-
-      user = { id: userId, phone, inviteCode, role: invite.role, createdAt: new Date() };
-    }
-
-    await createSession({ phone: user.phone, role: user.role, inviteCode: user.inviteCode });
-
-    return Response.json({ success: true, role: user.role, redirect: "/chat" });
+    return Response.json({
+      success: true,
+      role: result.session.role,
+      redirect: "/chat",
+    });
   } catch (err) {
     console.error("[/api/auth/login]", err);
     return Response.json({ error: "登录失败" }, { status: 500 });

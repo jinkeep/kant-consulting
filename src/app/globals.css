@@ -35,6 +35,64 @@
   }
 }
 
+@media print {
+  /* 打印/导出 PDF 时：纯白底黑字、A4 边距、彩色保真 */
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* 让浏览器保留链接框、表格边框等颜色 */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 隐藏所有标记了 print:hidden 的交互/装饰元素，避免动画与按钮入纸 */
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  /* 报告正文：占满纸宽、去掉屏幕上的左侧装饰线和缩进 */
+  [data-print="report"] {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  /* motion/react 会给未进入视口的元素内联 opacity:0 / transform，
+     打印时整页一次性渲染、动画不触发，必须强制复位，否则正文空白 */
+  [data-print="report"],
+  [data-print="report"] * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* 表格不要在跨页时被拦腰截断 */
+  table {
+    page-break-inside: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+  }
+  thead {
+    display: table-header-group;
+  }
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
 @layer utilities {
   .shimmer {
     background: linear-gradient(
