@@ -49,18 +49,24 @@ export async function POST(request: NextRequest) {
       },
     ]);
 
-    // 先访问页面，然后通过 evaluate 注入 markdown（避免 URL 长度限制）
-    const reportUrl = `${origin}/report`;
+    // 直接用 URL 参数传递 markdown（绕过 localStorage 和 reload）
+    const encodedMarkdown = encodeURIComponent(markdown);
+    const reportUrl = `${origin}/report?__pdf=1&content=${encodedMarkdown}`;
 
     await page.goto(reportUrl, { waitUntil: "networkidle" });
 
-    // 在页面上下文中设置 localStorage，然后刷新
-    await page.evaluate((md: string) => {
-      localStorage.setItem("kant.lastReport", md);
-    }, markdown);
+    // 注入 Google Fonts 中文字体（解决 Render chromium 乱码）
+    await page.addStyleTag({
+      content: `
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+        body, * {
+          font-family: 'Noto Sans SC', ui-sans-serif, system-ui, -apple-system, sans-serif !important;
+        }
+      `,
+    });
 
-    // 刷新页面让 React 读取 localStorage
-    await page.reload({ waitUntil: "networkidle" });
+    // 等待字体加载完成（避免生成时字体还未下载）
+    await page.evaluate(() => document.fonts.ready);
 
     // 等待 Markdown 渲染完成（检查报告容器是否存在）
     await page.waitForSelector('[data-print="report"]', { timeout: 10000 });
