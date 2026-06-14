@@ -130,6 +130,7 @@ export default function ReportPage() {
   const reduce = useReducedMotion();
   const [markdown, setMarkdown] = React.useState<string | null>(null);
   const [generatedAt, setGeneratedAt] = React.useState(() => new Date());
+  const [pdfGenerating, setPdfGenerating] = React.useState(false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -275,7 +276,10 @@ export default function ReportPage() {
             <div className="bg-kant-bg p-5 flex items-center">
               <motion.button
                 type="button"
+                disabled={pdfGenerating}
                 onClick={async () => {
+                  if (pdfGenerating) return;
+                  setPdfGenerating(true);
                   try {
                     const res = await fetch("/api/report/pdf", {
                       method: "POST",
@@ -295,14 +299,32 @@ export default function ReportPage() {
                     URL.revokeObjectURL(url);
                   } catch (err) {
                     alert(`PDF 生成失败: ${err instanceof Error ? err.message : String(err)}`);
+                  } finally {
+                    setPdfGenerating(false);
                   }
                 }}
-                whileHover={reduce ? undefined : { scale: 1.02 }}
-                whileTap={reduce ? undefined : { scale: 0.98 }}
-                className="group relative inline-flex items-center gap-3 w-full justify-center px-5 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase overflow-hidden hover:bg-kant-accent transition-colors"
+                whileHover={reduce || pdfGenerating ? undefined : { scale: 1.02 }}
+                whileTap={reduce || pdfGenerating ? undefined : { scale: 0.98 }}
+                className="group relative inline-flex items-center gap-3 w-full justify-center px-5 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase overflow-hidden hover:bg-kant-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span aria-hidden className="transition-transform group-hover:-translate-y-0.5">↓</span>
-                下载 PDF
+                {pdfGenerating ? (
+                  <>
+                    <motion.span
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="inline-block"
+                      aria-hidden
+                    >
+                      ⟳
+                    </motion.span>
+                    生成中…
+                  </>
+                ) : (
+                  <>
+                    <span aria-hidden className="transition-transform group-hover:-translate-y-0.5">↓</span>
+                    下载 PDF
+                  </>
+                )}
               </motion.button>
             </div>
           </div>

@@ -1,0 +1,159 @@
+
+> kant-consulting@0.1.0 dev /Users/jinkeep/Mac_Work/KantWork/Kant_Consulting
+> next dev
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.31.142:3000
+- Environments: .env.local
+✓ Ready in 287ms
+
+ GET /test-pdf 404 in 426ms (next.js: 304ms, application-code: 122ms)
+ GET /login 200 in 439ms (next.js: 358ms, application-code: 82ms)
+ GET / 200 in 47ms (next.js: 9ms, application-code: 38ms)
+ GET / 200 in 16ms (next.js: 1052µs, application-code: 15ms)
+ GET / 200 in 14ms (next.js: 1523µs, application-code: 13ms)
+[PDF] 访问 URL: http://localhost:3000/report?__pdf=1&content=%23%20%E4%B8%9A%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A%0A%0A%23%23%20%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E5%88%86%E6%9E%9...
+ GET /report?__pdf=1&content=%23%20%E4%B8%9A%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%8A%E6%96%AD%E6%8A%A5%E5%91%8A%0A%0A%23%23%20%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%E5%88%86%E6%9E%90%0A%0A%23%23%23%20%E7%8E%B0%E6%9C%89%E6%B5%81%E7%A8%8B%0A-%20%E6%89%8B%E5%B7%A5%E6%B5%81%E7%A8%8B%E5%8D%A0%E6%AF%94%EF%BC%9A60%25%0A-%20%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90%E5%BA%A6%EF%BC%9A%E4%B8%AD%E7%AD%89%0A-%20%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E6%95%88%E7%8E%87%EF%BC%9A%E4%BD%8E%0A%0A%23%23%20%E5%85%B3%E9%94%AE%E6%94%B9%E8%BF%9B%E6%9C%BA%E4%BC%9A%0A%0A-%20%E8%87%AA%E5%8A%A8%E5%8C%96%E5%AE%A2%E6%88%B7%E8%B7%9F%E8%BF%9B%E6%B5%81%E7%A8%8B%0A-%20%E9%9B%86%E6%88%90CRM%E4%B8%8E%E6%8A%A5%E8%A1%A8%E7%B3%BB%E7%BB%9F%0A-%20%E4%BC%98%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BD%95%E5%85%A5%E7%8E%AF%E8%8A%82%0A-%20%E5%BB%BA%E7%AB%8B%E7%BB%9F%E4%B8%80%E6%95%B0%E6%8D%AE%E7%9C%8B%E6%9D%BF%0A%0A%23%23%20%E5%AE%9E%E6%96%BD%E8%B7%AF%E5%BE%84%0A%0A%23%23%23%20%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%881-2%E4%B8%AA%E6%9C%88%EF%BC%89%0A%E5%AE%A2%E6%88%B7%E8%B7%9F%E8%BF%9B%E8%87%AA%E5%8A%A8%E5%8C%96%EF%BC%8C%E5%87%8F%E5%B0%9150%25%E6%89%8B%E5%B7%A5%E6%93%8D%E4%BD%9C%0A%0A%23%23%23%20%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%883-4%E4%B8%AA%E6%9C%88%EF%BC%89%0A%E7%B3%BB%E7%BB%9F%E9%9B%86%E6%88%90%EF%BC%8C%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E5%90%8C%E6%AD%A5%0A%0A%23%23%23%20%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%885-6%E4%B8%AA%E6%9C%88%EF%BC%89%0A%E6%95%B0%E6%8D%AE%E6%B5%81%E5%85%A8%E9%9D%A2%E4%BC%98%E5%8C%96%EF%BC%8C%E5%BB%BA%E7%AB%8B%E5%AE%9E%E6%97%B6%E7%9B%91%E6%8E%A7 200 in 60ms (next.js: 9ms, proxy.ts: 21ms, application-code: 31ms)
+[Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[Browser] [HMR] connected
+[Browser] URL 参数解析失败: URIError: URI malformed
+    at decodeURIComponent (<anonymous>)
+    at ReportPage.useEffect (http://localhost:3000/_next/static/chunks/src_0tliq_z._.js:704:37)
+    at Object.react_stack_bottom_frame (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:15087:22)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:965:74)
+    at commitHookEffectListMount (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:7255:167)
+    at commitHookPassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:7290:60)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8689:33)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8693:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8693:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8750:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+    at commitPassiveMountOnFiber (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8688:17)
+    at recursivelyTraversePassiveMountEffects (http://localhost:3000/_next/static/chunks/1es5_next_dist_compiled_react-dom_1b52_wr._.js:8676:316)
+[browser] URL 参数解析失败: URIError: URI malformed
+    at decodeURIComponent (<anonymous>)
+    at ReportPage.useEffect (src/app/report/page.tsx:144:25)
+  142 |     if (pdfMode === "1" && urlContent) {
+  143 |       try {
+> 144 |         const decoded = decodeURIComponent(urlContent);
+      |                         ^
+  145 |         if (!cancelled) setMarkdown(decoded);
+  146 |         return;
+  147 |       } catch (err) { (src/app/report/page.tsx:148:17)
+ GET /api/report 200 in 1701ms (next.js: 40ms, application-code: 1661ms)
+[PDF] 页面内容前500字符: ── No Report Yet还没有诊断报告完成一次完整的对话之后，报告会自动出现在这里。开始诊断→self.__next_r="OY20ZNDOgPD8MLQgCvCy3"(self.__next_f=self.__next_f||[]).push([0])self.__next_f.push([1,"11:I[\"[project]/node_modules/.pnpm/next@16.2.9_@babel+core@7.29.7_@opentelemetry+api@1.9.1_@playwright+test@1.60.0_react-d_3515adf95e2883dbe3e637f06fd70f51/node_modules/next/dist/client/components/builtin/global-error.js [app-client] (ecmascript)\",[\"/_next/static/chunks/1es5_next_dist_1ujfe6h._.js\",\"/_next/static/chunks/src_app_layout_tsx_
+PDF 生成失败: Error [TimeoutError]: page.waitForSelector: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[data-print="report"]') to be visible[22m
+
+    at POST (src/app/api/report/pdf/route.ts:68:16)
+  66 |
+  67 |     // 等待 Markdown 渲染完成（检查报告容器是否存在）
+> 68 |     await page.waitForSelector('[data-print="report"]', { timeout: 10000 });
+     |                ^
+  69 |
+  70 |     // 生成 PDF
+  71 |     const pdfBuffer = await page.pdf({
+ POST /api/report/pdf 500 in 12.8s (next.js: 189ms, application-code: 12.6s)
+ GET / 200 in 17ms (next.js: 1120µs, application-code: 16ms)
+ GET / 200 in 14ms (next.js: 823µs, application-code: 14ms)
+ GET /report 200 in 24ms (next.js: 1474µs, proxy.ts: 1539µs, application-code: 21ms)
+ GET /api/report 200 in 89ms (next.js: 1346µs, application-code: 87ms)
+ GET /report 200 in 48ms (next.js: 3ms, proxy.ts: 5ms, application-code: 40ms)
+ GET /api/report 200 in 85ms (next.js: 1092µs, application-code: 84ms)
+ POST /api/report/pdf 200 in 1652ms (next.js: 1293µs, application-code: 1650ms)
+ GET / 200 in 13ms (next.js: 873µs, application-code: 12ms)
+ GET / 200 in 25ms (next.js: 12ms, application-code: 13ms)
+ GET / 200 in 19ms (next.js: 870µs, application-code: 18ms)
+ GET /report 200 in 14ms (next.js: 883µs, proxy.ts: 1869µs, application-code: 11ms)
+ GET /api/report 200 in 758ms (next.js: 847µs, application-code: 757ms)
+ GET /report 200 in 19ms (next.js: 2ms, proxy.ts: 1990µs, application-code: 15ms)
+ GET /api/report 200 in 1234ms (next.js: 1078µs, application-code: 1232ms)
+ GET /report 200 in 29ms (next.js: 1600µs, proxy.ts: 2ms, application-code: 25ms)
+ GET /api/report 200 in 273ms (next.js: 655µs, application-code: 273ms)
+ POST /api/report/pdf 200 in 2.9s (next.js: 1953µs, application-code: 2.9s)
+ GET /report 200 in 38ms (next.js: 6ms, proxy.ts: 6ms, application-code: 27ms)
+ GET /report 200 in 39ms (next.js: 6ms, proxy.ts: 6ms, application-code: 26ms)
+ GET /api/report 200 in 1688ms (next.js: 4ms, application-code: 1683ms)
+ GET /report 200 in 15ms (next.js: 1549µs, proxy.ts: 1654µs, application-code: 12ms)
+ GET /api/report 200 in 120ms (next.js: 828µs, application-code: 120ms)
+ GET /report 200 in 41ms (next.js: 3ms, proxy.ts: 5ms, application-code: 33ms)
+ GET /api/report 200 in 259ms (next.js: 638µs, application-code: 258ms)
+ POST /api/report/pdf 200 in 1855ms (next.js: 6ms, application-code: 1849ms)
+ GET /report 200 in 30ms (next.js: 4ms, proxy.ts: 5ms, application-code: 21ms)
+[Browser] [Fast Refresh] rebuilding
+✓ Compiled in 205ms
+[Browser] [Fast Refresh] done in 212ms
+[Browser] [Fast Refresh] rebuilding
+✓ Compiled in 15ms
+[Browser] [Fast Refresh] done in 22ms
+ GET /report 200 in 16ms (next.js: 3ms, proxy.ts: 1503µs, application-code: 12ms)
+ GET /api/report 200 in 3.2s (next.js: 1086µs, application-code: 3.2s)
+ GET /report 200 in 31ms (next.js: 2ms, proxy.ts: 3ms, application-code: 26ms)
+ GET /api/report 200 in 91ms (next.js: 656µs, application-code: 90ms)
+ POST /api/report/pdf 200 in 4.8s (next.js: 5ms, application-code: 4.8s)
+ GET / 200 in 51ms (next.js: 12ms, application-code: 39ms)
+ GET /chat 200 in 62ms (next.js: 40ms, proxy.ts: 10ms, application-code: 12ms)
+ GET /api/auth/me 200 in 32ms (next.js: 27ms, application-code: 5ms)
+ GET /api/auth/me 200 in 4ms (next.js: 999µs, application-code: 3ms)
+[Browser] [Fast Refresh] rebuilding
+[Browser] [Fast Refresh] done in 170ms
+ GET /api/report 200 in 969ms (next.js: 1036µs, application-code: 968ms)
+ GET /api/report 200 in 168ms (next.js: 4ms, application-code: 165ms)
+ GET /report 200 in 28ms (next.js: 7ms, proxy.ts: 5ms, application-code: 16ms)
+ GET /api/report 200 in 220ms (next.js: 5ms, application-code: 216ms)
+ GET /api/report 200 in 187ms (next.js: 4ms, application-code: 184ms)
+ GET /report 200 in 16ms (next.js: 915µs, proxy.ts: 1245µs, application-code: 14ms)
+ GET /api/report 200 in 85ms (next.js: 750µs, application-code: 84ms)
+ GET /report 200 in 42ms (next.js: 3ms, proxy.ts: 4ms, application-code: 36ms)
+ GET /api/report 200 in 141ms (next.js: 683µs, application-code: 141ms)
+ POST /api/report/pdf 200 in 1776ms (next.js: 1180µs, application-code: 1774ms)
+ GET / 200 in 20ms (next.js: 2ms, application-code: 17ms)
+ GET /report?__pdf=1&content=%23%20%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A%0A%0A%E8%BF%99%E6%98%AF**%E4%B8%AD%E6%96%87%E6%B5%8B%E8%AF%95**%E5%86%85%E5%AE%B9%E3%80%82%0A%0A%23%23%20%E4%B8%9A%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8C%96%E6%9C%BA%E4%BC%9A%0A%0A-%20%E6%9C%BA%E4%BC%9A%E4%B8%80%EF%BC%9A%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%81%E7%A8%8B%0A-%20%E6%9C%BA%E4%BC%9A%E4%BA%8C%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90 200 in 15ms (next.js: 848µs, proxy.ts: 1520µs, application-code: 12ms)
+ POST /api/report/pdf 200 in 3.8s (next.js: 1631µs, application-code: 3.8s)
+[Browser] [Fast Refresh] rebuilding
+ GET /api/report 401 in 10ms (next.js: 2ms, application-code: 7ms)
+[Browser] Failed to load resource: the server responded with a status of 401 (Unauthorized)
+✓ Compiled in 32ms
+[Browser] [Fast Refresh] done in 40ms
+[Browser] [Fast Refresh] rebuilding
+✓ Compiled in 555ms
+[Browser] [Fast Refresh] done in 565ms
