@@ -69,7 +69,9 @@ export async function POST(req: Request) {
 
     const page = await browser.newPage();
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const host = req.headers.get("host") || "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
     const reportUrl = `${baseUrl}/report?__pdf=1&content=${encodeURIComponent(markdown)}`;
 
     await page.goto(reportUrl, { waitUntil: "domcontentloaded", timeout: 25000 });
