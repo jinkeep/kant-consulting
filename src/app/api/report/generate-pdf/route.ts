@@ -48,6 +48,22 @@ export async function POST(req: Request) {
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--disable-extensions",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-breakpad",
+        "--disable-component-extensions-with-background-pages",
+        "--disable-features=TranslateUI,BlinkGenPropertyTrees",
+        "--disable-ipc-flooding-protection",
+        "--disable-renderer-backgrounding",
+        "--enable-features=NetworkService,NetworkServiceInProcess",
+        "--force-color-profile=srgb",
+        "--hide-scrollbars",
+        "--metrics-recording-only",
+        "--mute-audio",
+        "--no-first-run",
       ],
     });
 
@@ -105,7 +121,12 @@ export async function POST(req: Request) {
     });
 
   } catch (err) {
-    console.error("[POST /api/report/generate-pdf]", err);
+    console.error("[POST /api/report/generate-pdf] Error details:", {
+      reportId,
+      error: err instanceof Error ? err.message : String(err),
+      stack: err instanceof Error ? err.stack : undefined,
+      name: err instanceof Error ? err.name : undefined,
+    });
 
     // Update status to failed
     await db
@@ -114,7 +135,10 @@ export async function POST(req: Request) {
       .where(eq(reports.id, reportId));
 
     return Response.json(
-      { error: err instanceof Error ? err.message : "PDF generation failed" },
+      {
+        error: err instanceof Error ? err.message : "PDF generation failed",
+        details: err instanceof Error ? err.stack : undefined
+      },
       { status: 500 }
     );
   }
