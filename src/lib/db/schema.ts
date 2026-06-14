@@ -87,6 +87,10 @@ export const reports = mysqlTable(
       { onDelete: "set null" }
     ),
     content: json("content").$type<Record<string, unknown>>().notNull(),
+    pdfStatus: mysqlEnum("pdf_status", ["pending", "generating", "completed", "failed"])
+      .notNull()
+      .default("pending"),
+    pdfUrl: text("pdf_url"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [index("reports_phone_idx").on(t.userPhone, t.createdAt)]

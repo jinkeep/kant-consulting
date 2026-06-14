@@ -131,6 +131,9 @@ export default function ReportPage() {
   const [markdown, setMarkdown] = React.useState<string | null>(null);
   const [generatedAt, setGeneratedAt] = React.useState(() => new Date());
   const [pdfGenerating, setPdfGenerating] = React.useState(false);
+  const [pdfStatus, setPdfStatus] = React.useState<"pending" | "generating" | "completed" | "failed" | null>(null);
+  const [pdfUrl, setPdfUrl] = React.useState<string | null>(null);
+  const [reportId, setReportId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -162,7 +165,7 @@ export default function ReportPage() {
     // 优先从服务器拉取（跨设备/浏览器持久化），失败或为空再退回 localStorage
     fetch("/api/report")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((data: { report?: string | null; generatedAt?: string }) => {
+      .then((data: { report?: string | null; generatedAt?: string; reportId?: string; pdfStatus?: string; pdfUrl?: string }) => {
         if (cancelled) return;
         if (data.report && data.report.trim()) {
           setMarkdown(data.report);
@@ -170,6 +173,9 @@ export default function ReportPage() {
             const d = new Date(data.generatedAt);
             if (!Number.isNaN(d.getTime())) setGeneratedAt(d);
           }
+          if (data.reportId) setReportId(data.reportId);
+          if (data.pdfStatus) setPdfStatus(data.pdfStatus as any);
+          if (data.pdfUrl) setPdfUrl(data.pdfUrl);
           // 同步回本地，保持离线可读
           try {
             window.localStorage.setItem(REPORT_STORAGE_KEY, data.report);
@@ -276,38 +282,27 @@ export default function ReportPage() {
             <div className="bg-kant-bg p-5 flex items-center">
               <motion.button
                 type="button"
-                disabled={pdfGenerating}
+                disabled={pdfStatus === "generating" || pdfStatus === "pending"}
                 onClick={async () => {
-                  if (pdfGenerating) return;
-                  setPdfGenerating(true);
-                  try {
-                    const res = await fetch("/api/report/pdf", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ markdown }),
-                    });
-                    if (!res.ok) {
-                      const errorData = await res.json().catch(() => ({ error: "未知错误" }));
-                      throw new Error(errorData.detail || errorData.error || "PDF 生成失败");
-                    }
-                    const blob = await res.blob();
-                    const url = URL.createObjectURL(blob);
+                  if (pdfStatus === "completed" && pdfUrl) {
+                    // PDF已生成，直接下载
                     const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `kant-report-${Date.now()}.pdf`;
+                    a.href = pdfUrl;
+                    a.download = `kant-report-${reportId || Date.now()}.pdf`;
                     a.click();
-                    URL.revokeObjectURL(url);
-                  } catch (err) {
-                    alert(`PDF 生成失败: ${err instanceof Error ? err.message : String(err)}`);
-                  } finally {
-                    setPdfGenerating(false);
+                  } else if (pdfStatus === "failed") {
+                    // PDF生成失败，提示用户
+                    alert("PDF 生成失败，请刷新页面重试");
+                  } else {
+                    // 等待中，提示用户稍候
+                    alert("PDF 正在后台生成，请稍后再试");
                   }
                 }}
-                whileHover={reduce || pdfGenerating ? undefined : { scale: 1.02 }}
-                whileTap={reduce || pdfGenerating ? undefined : { scale: 0.98 }}
+                whileHover={reduce || pdfStatus !== "completed" ? undefined : { scale: 1.02 }}
+                whileTap={reduce || pdfStatus !== "completed" ? undefined : { scale: 0.98 }}
                 className="group relative inline-flex items-center gap-3 w-full justify-center px-5 py-3 bg-kant-fg text-kant-bg font-mono text-xs tracking-[0.2em] uppercase overflow-hidden hover:bg-kant-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {pdfGenerating ? (
+                {pdfStatus === "generating" || pdfStatus === "pending" ? (
                   <>
                     <motion.span
                       animate={{ rotate: 360 }}
@@ -317,7 +312,12 @@ export default function ReportPage() {
                     >
                       ⟳
                     </motion.span>
-                    生成中…
+                    {pdfStatus === "generating" ? "生成中…" : "准备中…"}
+                  </>
+                ) : pdfStatus === "failed" ? (
+                  <>
+                    <span aria-hidden>⚠</span>
+                    生成失败
                   </>
                 ) : (
                   <>

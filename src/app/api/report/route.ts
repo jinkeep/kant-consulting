@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { desc, eq, and, inArray } from "drizzle-orm";
 import { verifySession } from "@/lib/auth/dal";
 import { getDb } from "@/lib/db/client";
-import { messages, sessions } from "@/lib/db/schema";
+import { messages, sessions, reports } from "@/lib/db/schema";
 
 export const runtime = "nodejs";
 
@@ -15,7 +15,31 @@ export async function GET() {
   try {
     const db = getDb();
 
-    // 1. 找该用户最近更新的 session（current_node = 'report' 或有 report 消息）
+    // 1. 找该用户最近的报告记录
+    const latestReport = await db
+      .select()
+      .from(reports)
+      .where(eq(reports.userPhone, session.phone))
+      .orderBy(desc(reports.createdAt))
+      .limit(1);
+
+    if (latestReport.length > 0) {
+      const report = latestReport[0];
+      const markdown =
+        typeof report.content === "string"
+          ? report.content
+          : JSON.stringify(report.content);
+
+      return NextResponse.json({
+        report: markdown,
+        generatedAt: report.createdAt.toISOString(),
+        reportId: report.id,
+        pdfStatus: report.pdfStatus,
+        pdfUrl: report.pdfUrl,
+      });
+    }
+
+    // 2. 兜底：从 messages 表查找（向后兼容）
     const userSessions = await db
       .select({ id: sessions.id })
       .from(sessions)
@@ -29,7 +53,6 @@ export async function GET() {
 
     const sessionIds = userSessions.map((s) => s.id);
 
-    // 2. 在这些 session 里找最新的 report 节点 assistant 消息
     const reportMsg = await db
       .select({
         content: messages.content,

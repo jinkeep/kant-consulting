@@ -21,13 +21,16 @@ export async function POST(req: Request) {
     const body = (await req.json()) as CreateReportRequest;
     const db = getDb();
 
+    const reportId = randomUUID();
+
     const [report] = await db
       .insert(reports)
       .values({
-        id: randomUUID(),
+        id: reportId,
         userPhone: session.phone,
         sessionId: body.sessionId ?? null,
         content: body.content,
+        pdfStatus: "pending",
       })
       .$returningId()
       .then(() =>
@@ -38,6 +41,13 @@ export async function POST(req: Request) {
           .orderBy(desc(reports.createdAt))
           .limit(1)
       );
+
+    // Trigger background PDF generation (fire and forget)
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/report/generate-pdf`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reportId }),
+    }).catch(err => console.error("Failed to trigger PDF generation:", err));
 
     return Response.json({ id: report.id });
   } catch (err) {
