@@ -53,7 +53,10 @@ export async function POST(request: NextRequest) {
     const encodedMarkdown = encodeURIComponent(markdown);
     const reportUrl = `${origin}/report?__pdf=1&content=${encodedMarkdown}`;
 
-    await page.goto(reportUrl, { waitUntil: "networkidle" });
+    await page.goto(reportUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
+
+    // 等待页面 JS 初始化（React 挂载）
+    await page.waitForTimeout(2000);
 
     // 注入 Google Fonts 中文字体（解决 Render chromium 乱码）
     await page.addStyleTag({
@@ -69,7 +72,7 @@ export async function POST(request: NextRequest) {
     await page.evaluate(() => document.fonts.ready);
 
     // 等待 Markdown 渲染完成（检查报告容器是否存在）
-    await page.waitForSelector('[data-print="report"]', { timeout: 10000 });
+    await page.waitForSelector('[data-print="report"]', { timeout: 15000 });
 
     // 生成 PDF
     const pdfBuffer = await page.pdf({
