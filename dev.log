@@ -168,3 +168,72 @@ Call log:
 [2m  - waiting for locator('[data-print="report"]') to be visible[22m
 
     at POST (.next/dev/server/chunks/[root-of-the-server]__1ghzn06._.js?id=[project]/src/app/api/report/pdf/route.ts+[app-route]+(ecmascript):84:20)
+[Browser] [Fast Refresh] rebuilding
+[Browser] [Fast Refresh] done in 159ms
+[Browser] [Fast Refresh] rebuilding
+ GET /login 200 in 233ms (next.js: 91ms, application-code: 142ms)
+ GET /test-pdf 404 in 276ms (next.js: 140ms, application-code: 136ms)
+[Browser] [Fast Refresh] done in 263ms
+ GET /test-pdf 404 in 34ms (next.js: 17ms, application-code: 17ms)
+ GET /login 200 in 147ms (next.js: 46ms, application-code: 102ms)
+ GET /login 200 in 154ms (next.js: 17ms, application-code: 137ms)
+ GET /login 200 in 142ms (next.js: 4ms, application-code: 138ms)
+[Browser] [Fast Refresh] rebuilding
+ GET /login 200 in 126ms (next.js: 4ms, application-code: 122ms)
+ GET /test-pdf 404 in 179ms (next.js: 13ms, application-code: 166ms)
+ GET /login 200 in 103ms (next.js: 5ms, application-code: 98ms)
+ GET /login 200 in 109ms (next.js: 10ms, application-code: 99ms)
+[Browser] [Fast Refresh] done in 135ms
+ GET /login 200 in 116ms (next.js: 4ms, application-code: 112ms)
+ GET /login 200 in 116ms (next.js: 14ms, application-code: 102ms)
+ GET /login 200 in 135ms (next.js: 14ms, application-code: 121ms)
+ GET /login 200 in 149ms (next.js: 5ms, application-code: 144ms)
+ GET /login 200 in 150ms (next.js: 11ms, application-code: 139ms)
+ GET /login 200 in 120ms (next.js: 4ms, application-code: 116ms)
+ GET /login 200 in 157ms (next.js: 19ms, application-code: 138ms)
+ GET /login 200 in 122ms (next.js: 20ms, application-code: 102ms)
+ GET /login 200 in 146ms (next.js: 13ms, application-code: 133ms)
+ GET /login 200 in 98ms (next.js: 18ms, application-code: 81ms)
+ GET /login 200 in 148ms (next.js: 3ms, application-code: 145ms)
+ GET /login 200 in 149ms (next.js: 34ms, application-code: 115ms)
+ GET /login 200 in 76ms (next.js: 5ms, application-code: 72ms)
+[Browser] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+ GET /login 200 in 80ms (next.js: 4ms, application-code: 75ms)
+[Browser] [HMR] connected
+ GET /login 200 in 95ms (next.js: 4ms, application-code: 90ms)
+ GET /login 200 in 83ms (next.js: 4ms, application-code: 78ms)
+ GET /login 200 in 78ms (next.js: 7ms, application-code: 71ms)
+ GET /login 200 in 64ms (next.js: 5ms, application-code: 60ms)
+ GET /login 200 in 59ms (next.js: 4ms, application-code: 56ms)
+ GET /login 200 in 54ms (next.js: 4ms, application-code: 50ms)
+ GET /login 200 in 58ms (next.js: 3ms, application-code: 55ms)
+ GET /login 200 in 62ms (next.js: 1651µs, application-code: 60ms)
+ GET /login 200 in 74ms (next.js: 1348µs, application-code: 73ms)
+ GET /login 200 in 73ms (next.js: 5ms, application-code: 68ms)
+ GET /login 200 in 62ms (next.js: 2ms, application-code: 60ms)
+ GET /login 200 in 45ms (next.js: 3ms, application-code: 42ms)
+ GET /login 200 in 30ms (next.js: 1433µs, application-code: 29ms)
+ GET /login 200 in 26ms (next.js: 864µs, application-code: 26ms)
+ GET /login 200 in 28ms (next.js: 1365µs, application-code: 26ms)
+ GET /login 200 in 28ms (next.js: 1534µs, application-code: 27ms)
+ GET /login 200 in 20ms (next.js: 2ms, application-code: 18ms)
+ GET /login 200 in 10ms (next.js: 1806µs, application-code: 8ms)
+ GET /login 200 in 26ms (next.js: 778µs, application-code: 26ms)
+ GET /login 200 in 28ms (next.js: 944µs, application-code: 27ms)
+ GET /login 200 in 37ms (next.js: 865µs, application-code: 36ms)
+ GET /login 200 in 29ms (next.js: 818µs, application-code: 28ms)
+ GET /login 200 in 30ms (next.js: 1455µs, application-code: 28ms)
+ GET /login 200 in 35ms (next.js: 905µs, application-code: 34ms)
+ GET /login 200 in 28ms (next.js: 1234µs, application-code: 26ms)
+ GET /login 200 in 26ms (next.js: 1909µs, application-code: 24ms)
+ GET /login 200 in 25ms (next.js: 882µs, application-code: 24ms)
+ GET /login 200 in 29ms (next.js: 1170µs, application-code: 28ms)
+ GET /login 200 in 36ms (next.js: 1250µs, application-code: 35ms)
+ GET /login 200 in 29ms (next.js: 1181µs, application-code: 28ms)
+ GET /login 200 in 23ms (next.js: 1098µs, application-code: 22ms)
+ GET /login 200 in 15ms (next.js: 690µs, application-code: 15ms)
+ GET /login 200 in 8ms (next.js: 956µs, application-code: 7ms)
+[Browser] [Fast Refresh] rebuilding
+[Browser] [Fast Refresh] done in 184ms
+[Browser] [Fast Refresh] rebuilding
+[Browser] [Fast Refresh] done in 264ms

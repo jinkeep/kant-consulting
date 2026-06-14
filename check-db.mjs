@@ -1,36 +1,34 @@
-import { getDb } from "./src/lib/db/client.js";
-import { users, inviteCodes } from "./src/lib/db/schema.js";
+import mysql from 'mysql2/promise';
 
-async function check() {
-  const db = getDb();
+const connection = await mysql.createConnection({
+  host: 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+  port: 4000,
+  user: '2RHSTXDBpN45QRJ.root',
+  password: 'UlZ1POeXbk8Okdk3',
+  database: 'test',
+  ssl: { rejectUnauthorized: true }
+});
 
-  console.log('📞 查找用户 17767268888...');
-  const allUsers = await db.select().from(users);
-  console.log('所有用户数:', allUsers.length);
-  allUsers.forEach(u => {
-    console.log(`  - ${u.phone} (${u.role}, inviteCode: ${u.inviteCode})`);
-  });
+const [reports] = await connection.execute(
+  'SELECT id, user_phone, created_at FROM reports WHERE user_phone = ? ORDER BY created_at DESC LIMIT 3',
+  ['17767268888']
+);
 
-  const targetUser = allUsers.find(u => u.phone === '17767268888');
-  if (targetUser) {
-    console.log('✅ 找到目标用户:', targetUser);
+console.log('用户 17767268888 的报告:');
+reports.forEach(r => console.log(`  ${r.id} - ${r.created_at}`));
+
+if (reports.length > 0) {
+  const [full] = await connection.execute('SELECT content FROM reports WHERE id = ?', [reports[0].id]);
+  const content = full[0].content;
+  
+  console.log('\n最新报告 content keys:', Object.keys(content));
+  if (content.report) {
+    console.log('✅ report 字段存在, 长度:', content.report.length);
+    console.log('\n前 200 字符:');
+    console.log(content.report.substring(0, 200));
   } else {
-    console.log('❌ 未找到用户 17767268888');
-  }
-
-  console.log('\n🎫 查找邀请码 chijun...');
-  const allCodes = await db.select().from(inviteCodes);
-  console.log('所有邀请码数:', allCodes.length);
-  allCodes.forEach(c => {
-    console.log(`  - ${c.code} (${c.isActive ? '活跃' : '已用'}, ${c.role})`);
-  });
-
-  const targetCode = allCodes.find(c => c.code === 'chijun');
-  if (targetCode) {
-    console.log('✅ 找到邀请码 chijun:', targetCode);
-  } else {
-    console.log('❌ 未找到邀请码 chijun');
+    console.log('❌ 没有 report 字段');
   }
 }
 
-check().catch(console.error);
+await connection.end();

@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 
 type CreateReportRequest = {
   sessionId?: string;
-  content: Record<string, unknown>;
+  content: string | Record<string, unknown>;
 };
 
 export async function POST(req: Request) {
@@ -23,13 +23,18 @@ export async function POST(req: Request) {
 
     const reportId = randomUUID();
 
+    // Normalize content to string
+    const contentString = typeof body.content === "string"
+      ? body.content
+      : JSON.stringify(body.content);
+
     const [report] = await db
       .insert(reports)
       .values({
         id: reportId,
         userPhone: session.phone,
         sessionId: body.sessionId ?? null,
-        content: body.content,
+        content: contentString,
         pdfStatus: "pending",
       })
       .$returningId()

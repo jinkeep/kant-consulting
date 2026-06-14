@@ -39,10 +39,7 @@ export async function POST(req: Request) {
       .where(eq(reports.id, reportId));
 
     // Generate PDF
-    const markdown =
-      typeof report.content === "string"
-        ? report.content
-        : JSON.stringify(report.content);
+    const markdown = report.content;
 
     const browser = await chromium.launch({
       headless: true,

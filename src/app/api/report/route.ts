@@ -25,13 +25,9 @@ export async function GET() {
 
     if (latestReport.length > 0) {
       const report = latestReport[0];
-      const markdown =
-        typeof report.content === "string"
-          ? report.content
-          : JSON.stringify(report.content);
 
       return NextResponse.json({
-        report: markdown,
+        report: report.content,
         generatedAt: report.createdAt.toISOString(),
         reportId: report.id,
         pdfStatus: report.pdfStatus,

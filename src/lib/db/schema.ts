@@ -86,7 +86,7 @@ export const reports = mysqlTable(
       () => sessions.id,
       { onDelete: "set null" }
     ),
-    content: json("content").$type<Record<string, unknown>>().notNull(),
+    content: text("content").notNull(),
     pdfStatus: mysqlEnum("pdf_status", ["pending", "generating", "completed", "failed"])
       .notNull()
       .default("pending"),
