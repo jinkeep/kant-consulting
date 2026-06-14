@@ -48,7 +48,11 @@ export async function POST(req: Request) {
       );
 
     // Trigger background PDF generation (fire and forget)
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/report/generate-pdf`, {
+    const host = req.headers.get("host") || "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
+
+    fetch(`${baseUrl}/api/report/generate-pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reportId }),
