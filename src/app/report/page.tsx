@@ -134,6 +134,7 @@ export default function ReportPage() {
   const [pdfStatus, setPdfStatus] = React.useState<"pending" | "generating" | "completed" | "failed" | null>(null);
   const [pdfUrl, setPdfUrl] = React.useState<string | null>(null);
   const [reportId, setReportId] = React.useState<string | null>(null);
+  const [isPdfMode, setIsPdfMode] = React.useState(false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -142,6 +143,10 @@ export default function ReportPage() {
     const params = new URLSearchParams(window.location.search);
     const pdfMode = params.get("__pdf");
     const urlContent = params.get("content");
+
+    if (pdfMode === "1") {
+      setIsPdfMode(true);
+    }
 
     if (pdfMode === "1" && urlContent) {
       try {
@@ -330,7 +335,7 @@ export default function ReportPage() {
           </div>
         </FadeUp>
 
-        <FadeInView amount={0.1}>
+        <FadeInView amount={0.1} disabled={isPdfMode}>
           <article data-print="report" className="border-l-2 border-kant-fg pl-8 mb-16">
             <Markdown text={markdown} />
           </article>

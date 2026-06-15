@@ -237,3 +237,7 @@ Call log:
 [Browser] [Fast Refresh] done in 184ms
 [Browser] [Fast Refresh] rebuilding
 [Browser] [Fast Refresh] done in 264ms
+[Browser] [Fast Refresh] rebuilding
+[Browser] [Fast Refresh] done in 148ms
+ POST /api/auth/login 403 in 3.9s (next.js: 162ms, application-code: 3.7s)
+[?25h
